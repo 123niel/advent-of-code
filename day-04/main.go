@@ -19,7 +19,7 @@ var lines []string
 var pairs []p
 
 func main() {
-	lines = misc.ReadFile("inputs/04.txt")
+	lines = misc.ReadFile("input.txt")
 
 	for _, line := range lines {
 		pairs = append(pairs, parse(line))

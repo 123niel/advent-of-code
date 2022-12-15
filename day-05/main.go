@@ -15,13 +15,10 @@ type move struct {
 }
 
 var lines []string
-var stacksOriginal []misc.Stack[rune]
 var moves []move
 
-func main() {
-	lines = misc.ReadFile("./inputs/05.txt")
-
-	stacksOriginal = make([]misc.Stack[rune], 9)
+func readStacks(lines []string) []misc.Stack[rune] {
+	stacks := make([]misc.Stack[rune], 9)
 
 	for i := 7; i >= 0; i-- {
 		line := lines[i]
@@ -30,10 +27,16 @@ func main() {
 			char := rune(line[1+4*j])
 
 			if char != ' ' {
-				stacksOriginal[j].Push(char)
+				stacks[j].Push(char)
 			}
 		}
 	}
+
+	return stacks
+}
+
+func main() {
+	lines = misc.ReadFile("inputs.txt")
 
 	re := regexp.MustCompile(`move (\d+) from (\d+) to (\d+)`)
 
@@ -59,7 +62,7 @@ func main() {
 
 func part1() string {
 
-	stacks := misc.CopyStacks[rune](stacksOriginal)
+	stacks := readStacks(lines)
 
 	for _, m := range moves {
 		for i := 0; i < m.Quant; i++ {
@@ -80,19 +83,11 @@ func part1() string {
 }
 
 func part2() string {
-	stacks := misc.CopyStacks[rune](stacksOriginal)
+	stacks := readStacks(lines)
+
 	for _, m := range moves {
-
-		fmt.Printf("%v %v\n", stacks[m.From-1], m.Quant)
-
 		vals, _ := stacks[m.From-1].PopMutliple(m.Quant)
 		stacks[m.To-1].PushMultiple(vals)
-
-		for i := 0; i < m.Quant; i++ {
-			val, _ := stacks[m.From-1].Pop()
-
-			stacks[m.To-1].Push(val)
-		}
 	}
 
 	var tops string

@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	lines := misc.ReadFile("inputs/02.txt")
+	lines := misc.ReadFile("input.txt")
 	var sum int
 
 	for _, line := range lines {

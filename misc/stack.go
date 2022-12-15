@@ -58,8 +58,8 @@ func (s *Stack[T]) PopMutliple(n int) ([]T, bool) {
 	if len < n {
 		return []T{}, false
 	} else {
-		elements := s.Items[len-n : len-1]
-		s.Items = s.Items[:len-2]
+		elements := s.Items[len-n : len]
+		s.Items = s.Items[:len-n]
 		return elements, true
 	}
 }

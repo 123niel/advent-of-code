@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	lines := misc.ReadFile("inputs/01.txt")
+	lines := misc.ReadFile("input.txt")
 
 	elves := make([]int, 10)
 	currentElve := 0

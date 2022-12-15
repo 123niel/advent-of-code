@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	packs := misc.ReadFile("inputs/03.txt")
+	packs := misc.ReadFile("input.txt")
 
 	prios := make(map[rune]int)
 
