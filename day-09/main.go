@@ -20,7 +20,7 @@ type move struct {
 var moves []move
 
 func main() {
-	lines := misc.ReadFile("input_.txt")
+	lines := misc.ReadFile("input.txt")
 
 	for _, line := range lines {
 		tmp := strings.Split(line, " ")
@@ -45,6 +45,9 @@ func main() {
 }
 
 func part1() string {
+
+	visited := make(map[vec]bool)
+
 	h := vec{X: 0, Y: 0}
 	t := vec{X: 0, Y: 0}
 
@@ -53,23 +56,109 @@ func part1() string {
 			h.X += move.DX
 			h.Y += move.DY
 
-			diffX := h.X - t.X
-			diffY := h.Y - t.Y
+			pull(&h, &t)
 
-			if diffX == 2 {
-				t.X++
-				if diffY == 1 {
-					t.Y++
-				}
-			}
-
+			visited[t] = true
 		}
 	}
 
-	return fmt.Sprint()
+	return fmt.Sprint(len(visited))
 }
 
 func part2() string {
+	rope := make([]*vec, 10)
+	for i := 0; i < 10; i++ {
+		rope[i] = &vec{X: 0, Y: 0}
+	}
 
-	return fmt.Sprint()
+	visited := make(map[vec]bool)
+
+	for _, move := range moves {
+		// printRope(rope)
+		for i := 0; i < move.Count; i++ {
+			rope[0].X += move.DX
+			rope[0].Y += move.DY
+
+			for i := 0; i < 9; i++ {
+				pull(rope[i], rope[i+1])
+			}
+
+			visited[*rope[9]] = true
+		}
+	}
+
+	return fmt.Sprint(len(visited))
+}
+
+func pull(h, t *vec) {
+	diffX := h.X - t.X
+	diffY := h.Y - t.Y
+
+	if diffX == 2 {
+		t.X++
+		if diffY >= 1 {
+			t.Y++
+		} else if diffY <= -1 {
+			t.Y--
+		}
+	} else if diffX == -2 {
+		t.X--
+		if diffY >= 1 {
+			t.Y++
+		} else if diffY <= -1 {
+			t.Y--
+		}
+	} else if diffY == 2 {
+		t.Y++
+		if diffX >= 1 {
+			t.X++
+		} else if diffX <= -1 {
+			t.X--
+		}
+	} else if diffY == -2 {
+		t.Y--
+		if diffX >= 1 {
+			t.X++
+		} else if diffX <= -1 {
+			t.X--
+		}
+	}
+}
+
+func printRope(rope []*vec) {
+	var maxX, minX, maxY, minY int
+	for _, knot := range rope {
+		if knot.X > maxX {
+			maxX = knot.X
+		}
+		if knot.X < minX {
+			minX = knot.X
+		}
+		if knot.Y > maxY {
+			maxY = knot.Y
+		}
+		if knot.Y < minY {
+			minY = knot.Y
+		}
+	}
+
+	var output string
+
+	for y := maxY; y >= minY; y-- {
+		for x := minX; x <= maxX; x++ {
+			char := "."
+			if y == 0 && x == 0 {
+				char = "S"
+			}
+			for i := len(rope) - 1; i >= 0; i-- {
+				knot := *rope[i]
+				if x == knot.X && y == knot.Y {
+					char = fmt.Sprint(i)
+				}
+			}
+			output += string(char)
+		}
+		output += "\n"
+	}
+	fmt.Println(output)
 }
